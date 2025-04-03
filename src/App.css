@@ -144,5 +144,29 @@ body {
   box-shadow: 0 10px 20px rgba(0,0,0,0.4);
   cursor: pointer;
 }
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup-box {
+  background-color: #b3b3b3;
+  color: black;
+  padding: 25px 35px;
+  border-radius: 20px;
+  font-size: 22px;
+  font-weight: bold;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: 0.3s ease;
+}
 
 

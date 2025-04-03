@@ -84,10 +84,10 @@ function App() {
 
       {/* Всплывающая плашка */}
       {showPopup && (
-        <div className="popup" onClick={togglePopup}>
-          🚧WILL BE SOON
-        </div>
-      )}
+  <div className="popup-overlay" onClick={togglePopup}>
+    <div className="popup-box">🚧WILL BE SOON</div>
+  </div>
+)}
     </div>
   );
 }
