@@ -1,7 +1,7 @@
 return (
   <div
     style={{
-      backgroundImage: 'url("/reaper.png")',
+      backgroundImage: 'url("/reaper-mini.png")',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
