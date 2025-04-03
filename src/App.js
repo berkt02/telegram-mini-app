@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import { FaCoins, FaWallet, FaCube, FaLock } from "react-icons/fa";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -15,7 +14,7 @@ function App() {
     setUser(userData);
   }, []);
 
-  const handleButtonClick = () => {
+  const togglePopup = () => {
     setShowPopup((prev) => !prev);
   };
 
@@ -41,17 +40,10 @@ function App() {
       <div className="balance-card">
         <span className="balance-label">balance</span>
         <div className="balance-row">
-          <div className="balance-amount">
-            <FaCoins className="icon yellow" style={{ marginRight: 6 }} />
-            0.00 REAP
-          </div>
+          <div className="balance-amount">💰 0.00 REAP</div>
           <div className="balance-buttons">
-            <button className="btn btn-sell" onClick={handleButtonClick}>
-              SELL
-            </button>
-            <button className="btn btn-buy" onClick={handleButtonClick}>
-              BUY
-            </button>
+            <button className="btn btn-sell" onClick={togglePopup}>SELL</button>
+            <button className="btn btn-buy" onClick={togglePopup}>BUY</button>
           </div>
         </div>
       </div>
@@ -60,12 +52,10 @@ function App() {
       <div className="info-card">
         <div className="row-between">
           <div className="row-center">
-            <FaCube className="icon yellow" />
+            <span className="icon yellow">🟡</span>
             <span className="label">NFT</span>
           </div>
-          <button className="btn-flat" onClick={handleButtonClick}>
-            OPEN
-          </button>
+          <button className="btn-flat" onClick={togglePopup}>OPEN</button>
         </div>
       </div>
 
@@ -73,12 +63,10 @@ function App() {
       <div className="info-card">
         <div className="row-between">
           <div className="row-center">
-            <FaWallet className="icon blue" />
+            <span className="icon blue">🔵</span>
             <span className="label">WALLET</span>
           </div>
-          <button className="btn-flat" onClick={handleButtonClick}>
-            CONNECT
-          </button>
+          <button className="btn-flat" onClick={togglePopup}>CONNECT</button>
         </div>
       </div>
 
@@ -86,19 +74,17 @@ function App() {
       <div className="info-card">
         <div className="row-between">
           <div className="row-center">
-            <FaLock className="icon purple" />
+            <span className="icon purple">🟣</span>
             <span className="label">STAKING</span>
           </div>
-          <button className="btn-flat" onClick={handleButtonClick}>
-            OPEN
-          </button>
+          <button className="btn-flat" onClick={togglePopup}>OPEN</button>
         </div>
       </div>
 
       {/* Всплывающая плашка */}
       {showPopup && (
-        <div className="popup-overlay">
-          <div className="popup-box">🚧 WILL BE SOON</div>
+        <div className="popup-overlay" onClick={togglePopup}>
+          <div className="popup-box">WILL BE SOON</div>
         </div>
       )}
     </div>
