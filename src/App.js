@@ -2,28 +2,36 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
-    tg.ready(); // Telegram скажет, что Mini App загружен
-    setUser(tg.initDataUnsafe.user || {});
+    tg.ready();
+    tg.expand();
+
+    const userData = tg.initDataUnsafe?.user;
+    setUser(userData);
   }, []);
 
   return (
     <div className="container">
       <header className="header">REAPER'S HOME</header>
 
-      {/* Аватарка из Telegram */}
-      <img
-        src={`https://t.me/i/userpic/320/${user.username}.jpg`}
-        alt="avatar"
-        className="avatar"
-      />
+      {/* Аватарка + ник */}
+      {user ? (
+        <>
+          <img
+            src={`https://t.me/i/userpic/320/${user.username}.jpg`}
+            alt="avatar"
+            className="avatar"
+          />
+          <p className="nickname">@{user.username}</p>
+        </>
+      ) : (
+        <p className="nickname">Загрузка профиля...</p>
+      )}
 
-      {/* Username */}
-      <p className="nickname">@{user.username || "неизвестно"}</p>
-
+      {/* Блок баланса */}
       <div className="balance-card">
         <span className="balance-label">balance</span>
         <div className="balance-row">
@@ -34,83 +42,41 @@ function App() {
           </div>
         </div>
       </div>
+
+      {/* NFT Block */}
+      <div className="info-card">
+        <div className="row-between">
+          <div className="row-center">
+            <span className="icon yellow">🟡</span>
+            <span className="label">NFT</span>
+          </div>
+          <button className="btn-flat">OPEN</button>
+        </div>
+      </div>
+
+      {/* Wallet Block */}
+      <div className="info-card">
+        <div className="row-between">
+          <div className="row-center">
+            <span className="icon blue">🔵</span>
+            <span className="label">WALLET</span>
+          </div>
+          <span className="wallet-text">QOI.....EIW</span>
+        </div>
+      </div>
+
+      {/* Staking Block */}
+      <div className="info-card">
+        <div className="row-between">
+          <div className="row-center">
+            <span className="icon purple">🟣</span>
+            <span className="label">STAKING</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
 export default App;
-import React, { useEffect, useState } from 'react';
-
-function App() {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const tg = window.Telegram.WebApp;
-    tg.ready(); // сигнал Telegram, что всё ок
-    tg.expand(); // развернуть на весь экран
-
-    const userData = tg.initDataUnsafe?.user;
-    setUser(userData);
-  }, []);
-
-  return (
-    <div style={{
-      backgroundColor: '#1e1e2f',
-      color: 'white',
-      height: '100vh',
-      padding: '20px',
-      textAlign: 'center'
-    }}>
-      {user ? (
-        <>
-          <img
-            src={`https://t.me/i/userpic/320/${user.username}.jpg`}
-            alt="avatar"
-            style={{
-              width: 100,
-              height: 100,
-              borderRadius: '50%',
-              marginBottom: 20
-            }}
-          />
-          <h2>@{user.username}</h2>
-        </>
-      ) : (
-        <p>Загрузка профиля...</p>
-      )}
-    </div>
-  );
-}
-export default App;
-{/* NFT Block */}
-<div style={cardStyle}>
-  <div style={rowBetween}>
-    <div style={rowCenter}>
-      <span style={nftIcon}>🟡</span>
-      <span style={labelStyle}>NFT</span>
-    </div>
-    <button style={buttonStyle}>OPEN</button>
-  </div>
-</div>
-
-{/* Wallet Block */}
-<div style={cardStyle}>
-  <div style={rowBetween}>
-    <div style={rowCenter}>
-      <span style={walletIcon}>🔵</span>
-      <span style={labelStyle}>WALLET</span>
-    </div>
-    <span style={walletText}>QOI.....EIW</span>
-  </div>
-</div>
-
-{/* Staking Block */}
-<div style={cardStyle}>
-  <div style={rowBetween}>
-    <div style={rowCenter}>
-      <span style={stakingIcon}>🟣</span>
-      <span style={labelStyle}>STAKING</span>
-    </div>
-  </div>
-</div>
 
