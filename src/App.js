@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
+import { FaImage, FaWallet, FaChartLine } from "react-icons/fa";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -52,7 +53,7 @@ function App() {
       <div className="info-card">
         <div className="row-between">
           <div className="row-center">
-            <span className="icon">🖼icon yellow</span>
+            <FaImage className="icon" />
             <span className="label">NFT</span>
           </div>
           <button className="btn-flat" onClick={togglePopup}>OPEN</button>
@@ -63,7 +64,7 @@ function App() {
       <div className="info-card">
         <div className="row-between">
           <div className="row-center">
-            <span className="icon">icon blue</span>
+            <FaWallet className="icon" />
             <span className="label">WALLET</span>
           </div>
           <button className="btn-flat" onClick={togglePopup}>CONNECT</button>
@@ -74,7 +75,7 @@ function App() {
       <div className="info-card">
         <div className="row-between">
           <div className="row-center">
-            <span className="icon">icon purple</span>
+            <FaChartLine className="icon" />
             <span className="label">STAKING</span>
           </div>
           <button className="btn-flat" onClick={togglePopup}>OPEN</button>
@@ -83,8 +84,8 @@ function App() {
 
       {/* Всплывающая плашка */}
       {showPopup && (
-        <div className="popup-overlay" onClick={togglePopup}>
-          <div className="popup-box">🚧WILL BE SOON</div>
+        <div className="popup" onClick={togglePopup}>
+          🚧WILL BE SOON
         </div>
       )}
     </div>
@@ -92,4 +93,3 @@ function App() {
 }
 
 export default App;
-
