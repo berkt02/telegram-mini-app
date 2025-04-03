@@ -1,28 +1,23 @@
-function App() {
-  return (
-    <div
+return (
+  <div
+    style={{
+      margin: 0,
+      padding: 0,
+      height: '100vh',
+      width: '100vw',
+      overflow: 'hidden',
+    }}
+  >
+    <img
+      src="/reaper.png"
+      alt="Жнец"
       style={{
-        backgroundColor: '#0e0e0e',
-        height: '100vh',
-        padding: '20px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+        display: 'block'
       }}
-    >
-      <img
-        src="reaper.png"
-        alt="Жнец"
-        style={{
-          maxWidth: '100%',
-          maxHeight: '100%',
-          borderRadius: '12px',
-          boxShadow: '0 0 30px rgba(0, 0, 0, 0.5)'
-        }}
-      />
-    </div>
-  );
-}
-
-export default App;
+    />
+  </div>
+);
 
