@@ -11,7 +11,7 @@ function App() {
       }}
     >
       <img
-        src="/reaper.jpg"
+        src="/reaper.png"
         alt="Жнец"
         style={{
           maxWidth: '100%',
