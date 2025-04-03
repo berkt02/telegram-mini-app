@@ -83,4 +83,49 @@ body {
   background-color: #2f80ed;
   color: white;
 }
+const cardStyle = {
+  backgroundColor: '#151c26',
+  padding: '14px 18px',
+  borderRadius: '12px',
+  marginTop: '14px',
+  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.4)',
+};
+
+const rowBetween = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+};
+
+const rowCenter = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
+};
+
+const labelStyle = {
+  color: '#fff',
+  fontWeight: 'bold',
+  fontSize: '16px',
+};
+
+const walletText = {
+  color: '#999',
+  fontWeight: '500',
+  fontSize: '14px',
+};
+
+const buttonStyle = {
+  backgroundColor: '#1976d2',
+  color: '#fff',
+  border: 'none',
+  padding: '6px 14px',
+  borderRadius: '6px',
+  fontWeight: 'bold',
+  cursor: 'pointer',
+};
+
+const nftIcon = { fontSize: '16px' };
+const walletIcon = { fontSize: '16px' };
+const stakingIcon = { fontSize: '16px' };
 
