@@ -3,6 +3,7 @@ import "./App.css";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
@@ -12,6 +13,10 @@ function App() {
     const userData = tg.initDataUnsafe?.user;
     setUser(userData);
   }, []);
+
+  const handleButtonClick = () => {
+    setShowPopup((prev) => !prev);
+  };
 
   return (
     <div className="container">
@@ -37,8 +42,8 @@ function App() {
         <div className="balance-row">
           <div className="balance-amount">💰 0.00 REAP</div>
           <div className="balance-buttons">
-            <button className="btn btn-sell">SELL</button>
-            <button className="btn btn-buy">BUY</button>
+            <button className="btn btn-sell" onClick={handleButtonClick}>SELL</button>
+            <button className="btn btn-buy" onClick={handleButtonClick}>BUY</button>
           </div>
         </div>
       </div>
@@ -50,7 +55,7 @@ function App() {
             <span className="icon yellow">🟡</span>
             <span className="label">NFT</span>
           </div>
-          <button className="btn-flat">OPEN</button>
+          <button className="btn-flat" onClick={handleButtonClick}>OPEN</button>
         </div>
       </div>
 
@@ -61,7 +66,7 @@ function App() {
             <span className="icon blue">🔵</span>
             <span className="label">WALLET</span>
           </div>
-          <button className="btn-flat">CONNECT</button>
+          <button className="btn-flat" onClick={handleButtonClick}>CONNECT</button>
         </div>
       </div>
 
@@ -72,13 +77,21 @@ function App() {
             <span className="icon purple">🟣</span>
             <span className="label">STAKING</span>
           </div>
-          <button className="btn-flat">OPEN</button>
+          <button className="btn-flat" onClick={handleButtonClick}>OPEN</button>
         </div>
       </div>
+
+      {/* Всплывающая плашка */}
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-box">
+            WILL BE SOON
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 export default App;
-
 

@@ -114,4 +114,44 @@ body {
 .wallet-text {
   font-size: 12px;
   opacity: 0.7;
+}.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #b3b3b3;
+  color: black;
+  padding: 30px 40px;
+  border-radius: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+  z-index: 999;
+  text-align: center;
+  transition: opacity 0.3s ease;
 }
+
+.popup.hidden {
+  display: none;
+}
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #b3b3b3;
+  color: black;
+  padding: 30px 40px;
+  border-radius: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+  z-index: 999;
+  text-align: center;
+  transition: opacity 0.3s ease;
+}
+
+.popup.hidden {
+  display: none;
+}
+
