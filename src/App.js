@@ -52,7 +52,7 @@ function App() {
       <div className="info-card">
         <div className="row-between">
           <div className="row-center">
-            <span className="icon">🖼️</span>
+            <span className="icon">🖼icon yellow</span>
             <span className="label">NFT</span>
           </div>
           <button className="btn-flat" onClick={togglePopup}>OPEN</button>
@@ -63,7 +63,7 @@ function App() {
       <div className="info-card">
         <div className="row-between">
           <div className="row-center">
-            <span className="icon">👛</span>
+            <span className="icon">icon blue</span>
             <span className="label">WALLET</span>
           </div>
           <button className="btn-flat" onClick={togglePopup}>CONNECT</button>
@@ -74,7 +74,7 @@ function App() {
       <div className="info-card">
         <div className="row-between">
           <div className="row-center">
-            <span className="icon">📈</span>
+            <span className="icon">icon purple</span>
             <span className="label">STAKING</span>
           </div>
           <button className="btn-flat" onClick={togglePopup}>OPEN</button>
@@ -83,8 +83,8 @@ function App() {
 
       {/* Всплывающая плашка */}
       {showPopup && (
-        <div className="popup" onClick={togglePopup}>
-          🚧WILL BE SOON
+        <div className="popup-overlay" onClick={togglePopup}>
+          <div className="popup-box">🚧WILL BE SOON</div>
         </div>
       )}
     </div>
@@ -92,5 +92,4 @@ function App() {
 }
 
 export default App;
-
 
