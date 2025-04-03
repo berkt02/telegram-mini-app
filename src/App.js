@@ -61,7 +61,7 @@ function App() {
             <span className="icon blue">🔵</span>
             <span className="label">WALLET</span>
           </div>
-          <span className="wallet-text">QOI.....EIW</span>
+          <button className="btn-flat">CONNECT</button>
         </div>
       </div>
 
@@ -72,6 +72,7 @@ function App() {
             <span className="icon purple">🟣</span>
             <span className="label">STAKING</span>
           </div>
+          <button className="btn-flat">OPEN</button>
         </div>
       </div>
     </div>
@@ -79,4 +80,5 @@ function App() {
 }
 
 export default App;
+
 
