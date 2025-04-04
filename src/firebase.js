@@ -1,16 +1,16 @@
+// firebase.js
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAq1-0Ux-0TuYr3xx9MX8eZgXaUIUKsGfw",
-  authDomain: "reapers-home.firebaseapp.com",
-  databaseURL: "https://reapers-home-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "reapers-home",
-  storageBucket: "reapers-home.appspot.com",
-  messagingSenderId: "948912254625",
-  appId: "1:948912254625:web:75d58666c66c8940f00e89"
+  apiKey: "AIzaSyCK9gPS-vFAGllukaaqAGxcLGPcockkOqM",
+  authDomain: "reaper-s-home.firebaseapp.com",
+  databaseURL: "https://reapers-home-default-rtdb.europe-west1.firebasedatabase.app/",
+  projectId: "reaper-s-home",
+  storageBucket: "reaper-s-home.appspot.com",
+  messagingSenderId: "444788097451",
+  appId: "1:444788097451:web:b672bdbc0cd188543752ee"
 };
 
 const app = initializeApp(firebaseConfig);
 export const db = getDatabase(app);
-
