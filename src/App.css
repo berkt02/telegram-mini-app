@@ -134,6 +134,50 @@ body, html {
   cursor: pointer;
   font-size: 12px;
 }
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-box {
+  background-color: #1e1e2f;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+  color: white;
+  width: 90%;
+  max-width: 320px;
+  text-align: center;
+}
+
+.input-block {
+  margin-top: 15px;
+}
+
+.input-block input {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  margin: 5px 0;
+  width: 100%;
+  font-size: 14px;
+}
+
+.input-block button {
+  background-color: #2d7df5;
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 8px;
+}
 
 
 

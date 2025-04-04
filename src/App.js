@@ -2,84 +2,80 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
+  const [timeLeft, setTimeLeft] = useState({});
   const [user, setUser] = useState(null);
-  const [showTasks, setShowTasks] = useState(false);
-  const [refCount, setRefCount] = useState(0);
   const [balance, setBalance] = useState(0);
+  const [showTasks, setShowTasks] = useState(false);
   const [answer, setAnswer] = useState("");
-  const [taskCompleted, setTaskCompleted] = useState(false);
+  const [refCount, setRefCount] = useState(0);
 
   useEffect(() => {
     const tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
-    const userData = tg.initDataUnsafe?.user;
-    setUser(userData);
+    setUser(tg.initDataUnsafe?.user);
+
+    const targetDate = new Date("2024-04-30T00:00:00");
+    const timer = setInterval(() => {
+      const now = new Date();
+      const difference = targetDate - now;
+
+      const time = {
+        days: Math.max(Math.floor(difference / (1000 * 60 * 60 * 24)), 0),
+        hours: Math.max(Math.floor((difference / (1000 * 60 * 60)) % 24), 0),
+        minutes: Math.max(Math.floor((difference / 1000 / 60) % 60), 0),
+        seconds: Math.max(Math.floor((difference / 1000) % 60), 0),
+      };
+
+      setTimeLeft(time);
+    }, 1000);
+
+    return () => clearInterval(timer);
   }, []);
 
-  const toggleTasks = () => setShowTasks(prev => !prev);
-
-  const handleCheckAnswer = () => {
-    if (answer.trim() === "4" && !taskCompleted) {
-      setBalance(prev => prev + 10);
-      setTaskCompleted(true);
+  const handleAnswerCheck = () => {
+    if (answer === "4") {
+      setBalance((prev) => prev + 10);
+      setAnswer("");
     }
   };
 
-  const username = user?.username || "user";
-  const refLink = `https://t.me/reaphome_bot?start=${username}`;
+  const userRefLink = `https://t.me/reaphome_bot?start=${user?.id || "guest"}`;
 
   return (
     <div className="container">
-      <div className="overlay">
-        <div className="welcome-card">WELCOME</div>
+      <div className="welcome-card">WELCOME</div>
 
-        <div className="timer-card">
-          <div className="timer-item">
-            <div className="time">26</div>
-            <div className="label">дней</div>
-          </div>
-          <div className="timer-item">
-            <div className="time">4</div>
-            <div className="label">часов</div>
-          </div>
-          <div className="timer-item">
-            <div className="time">59</div>
-            <div className="label">минут</div>
-          </div>
-          <div className="timer-item">
-            <div className="time">52</div>
-            <div className="label">секунд</div>
-          </div>
-        </div>
+      <div className="timer-card">
+        <div>{timeLeft.days}<div className="label">дней</div></div>
+        <div>{timeLeft.hours}<div className="label">часов</div></div>
+        <div>{timeLeft.minutes}<div className="label">минут</div></div>
+        <div>{timeLeft.seconds}<div className="label">секунд</div></div>
+      </div>
 
-        <button className="tasks-btn" onClick={toggleTasks}>TASKS</button>
-        <div className="balance-box">bal: {balance.toFixed(2)}</div>
+      <button className="tasks-btn" onClick={() => setShowTasks(true)}>TASKS</button>
+      <div className="balance-card">bal: {balance.toFixed(2)}</div>
 
-        {showTasks && (
-          <div className="task-popup">
-            <h3>REF {refCount}/10 take</h3>
-            <p className="ref-link">Your ref link:</p>
-            <input value={refLink} readOnly className="ref-input" onClick={(e) => e.target.select()} />
-
-            <div className="quiz">
-              <label>2 + 2 = </label>
+      {showTasks && (
+        <div className="modal-overlay" onClick={() => setShowTasks(false)}>
+          <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+            <h3>REF {refCount} / 10 take</h3>
+            <p style={{ fontSize: "12px", wordBreak: "break-all" }}>
+              Your ref link:<br /> <span>{userRefLink}</span>
+            </p>
+            <div className="input-block">
+              <label>2 + 2 =</label>
               <input
                 type="text"
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
-                disabled={taskCompleted}
+                placeholder="Введите ответ"
               />
-              <button className="check-btn" onClick={handleCheckAnswer} disabled={taskCompleted}>
-                Проверить
-              </button>
-              {taskCompleted && <p className="success">+10 REAP добавлено!</p>}
+              <button onClick={handleAnswerCheck}>Check</button>
             </div>
-
-            <button className="close-btn" onClick={toggleTasks}>Закрыть</button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
