@@ -2,80 +2,73 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
+  const [targetDate] = useState(new Date("2024-05-01T00:00:00"));
   const [timeLeft, setTimeLeft] = useState({});
-  const [user, setUser] = useState(null);
+  const [popupOpen, setPopupOpen] = useState(false);
   const [balance, setBalance] = useState(0);
-  const [showTasks, setShowTasks] = useState(false);
+
+  const [refCount, setRefCount] = useState(0); // просто пример
   const [answer, setAnswer] = useState("");
-  const [refCount, setRefCount] = useState(0);
+  const [correctAnswered, setCorrectAnswered] = useState(false);
 
   useEffect(() => {
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-    tg.expand();
-    setUser(tg.initDataUnsafe?.user);
-
-    const targetDate = new Date("2024-04-30T00:00:00");
     const timer = setInterval(() => {
-      const now = new Date();
-      const difference = targetDate - now;
-
-      const time = {
-        days: Math.max(Math.floor(difference / (1000 * 60 * 60 * 24)), 0),
-        hours: Math.max(Math.floor((difference / (1000 * 60 * 60)) % 24), 0),
-        minutes: Math.max(Math.floor((difference / 1000 / 60) % 60), 0),
-        seconds: Math.max(Math.floor((difference / 1000) % 60), 0),
-      };
-
-      setTimeLeft(time);
+      const diff = targetDate - new Date();
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+      setTimeLeft({ days, hours, minutes, seconds });
     }, 1000);
-
     return () => clearInterval(timer);
-  }, []);
+  }, [targetDate]);
 
-  const handleAnswerCheck = () => {
-    if (answer === "4") {
+  const togglePopup = () => setPopupOpen(!popupOpen);
+
+  const handleAnswer = () => {
+    if (answer.trim() === "4" && !correctAnswered) {
       setBalance((prev) => prev + 10);
-      setAnswer("");
+      setCorrectAnswered(true);
     }
   };
 
-  const userRefLink = `https://t.me/reaphome_bot?start=${user?.id || "guest"}`;
-
   return (
-    <div className="container">
-      <div className="welcome-card">WELCOME</div>
+    <div className="app">
+      <div className="overlay">
+        <div className="welcome-box">WELCOME</div>
+        <div className="timer-box">
+          <div>{timeLeft.days} <span>дней</span></div>
+          <div>{timeLeft.hours} <span>часов</span></div>
+          <div>{timeLeft.minutes} <span>минут</span></div>
+          <div>{timeLeft.seconds} <span>секунд</span></div>
+        </div>
 
-      <div className="timer-card">
-        <div>{timeLeft.days}<div className="label">дней</div></div>
-        <div>{timeLeft.hours}<div className="label">часов</div></div>
-        <div>{timeLeft.minutes}<div className="label">минут</div></div>
-        <div>{timeLeft.seconds}<div className="label">секунд</div></div>
-      </div>
+        {/* TASKS Button */}
+        <button className="tasks-button" onClick={togglePopup}>TASKS</button>
+        <div className="balance-display">bal: {balance.toFixed(2)}</div>
 
-      <button className="tasks-btn" onClick={() => setShowTasks(true)}>TASKS</button>
-      <div className="balance-card">bal: {balance.toFixed(2)}</div>
+        {/* POPUP TASK WINDOW */}
+        {popupOpen && (
+          <div className="popup">
+            <h3>REF {refCount}/10</h3>
+            <p>Your ref link:</p>
+            <code>https://t.me/reaphome_bot?start=ref123</code>
 
-      {showTasks && (
-        <div className="modal-overlay" onClick={() => setShowTasks(false)}>
-          <div className="modal-box" onClick={(e) => e.stopPropagation()}>
-            <h3>REF {refCount} / 10 take</h3>
-            <p style={{ fontSize: "12px", wordBreak: "break-all" }}>
-              Your ref link:<br /> <span>{userRefLink}</span>
-            </p>
-            <div className="input-block">
-              <label>2 + 2 =</label>
+            <div className="task-question">
+              <label>2 + 2 = </label>
               <input
                 type="text"
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
-                placeholder="Введите ответ"
               />
-              <button onClick={handleAnswerCheck}>Check</button>
+              <button onClick={handleAnswer}>Submit</button>
+              {correctAnswered && <p className="reward">+10 получено!</p>}
             </div>
+
+            <button className="close-btn" onClick={togglePopup}>✖</button>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
