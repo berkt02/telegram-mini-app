@@ -18,11 +18,9 @@ function App() {
   const [correctAnswered, setCorrectAnswered] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [completedTasks, setCompletedTasks] = useState([]);
-
   const [showLeaders, setShowLeaders] = useState(false);
   const [topUsers, setTopUsers] = useState([]);
 
-  // Таймер обратного отсчета
   useEffect(() => {
     const timer = setInterval(() => {
       const diff = targetDate - new Date();
@@ -35,7 +33,6 @@ function App() {
     return () => clearInterval(timer);
   }, [targetDate]);
 
-  // Загрузка баланса и рефералов
   useEffect(() => {
     const balanceRef = ref(db, `users/${userId}/balance`);
     const refCountRef = ref(db, `users/${userId}/refCount`);
@@ -43,7 +40,6 @@ function App() {
     onValue(refCountRef, (snap) => setRefCount(snap.val() || 0));
   }, [userId]);
 
-  // Реферальная система
   useEffect(() => {
     const inviterId = tg.initDataUnsafe?.start_param;
     if (inviterId && inviterId !== userId) {
@@ -55,7 +51,6 @@ function App() {
     }
   }, [userId]);
 
-  // Загрузка задач и выполненных
   useEffect(() => {
     const tasksRef = ref(db);
     get(child(tasksRef, "tasks")).then((snapshot) => {
@@ -75,7 +70,6 @@ function App() {
     });
   }, [userId]);
 
-  // Получение топа
   const fetchTopUsers = () => {
     const usersRef = ref(db, "users");
     onValue(usersRef, (snapshot) => {
@@ -122,13 +116,15 @@ function App() {
           <div>{timeLeft.seconds} <span>секунд</span></div>
         </div>
 
-        <button className="tasks-button" onClick={togglePopup}>TASKS</button>
-        <div className="balance-display">bal: {balance.toFixed(2)}</div>
-
-        <button className="page-btn" onClick={() => {
-          setShowLeaders(true);
-          fetchTopUsers();
-        }}>🏆 Топ игроков</button>
+        {/* Bottom Left UI */}
+        <div className="bottom-left">
+          <button className="tasks-button" onClick={togglePopup}>TASKS</button>
+          <div className="balance-display">bal: {balance.toFixed(2)}</div>
+          <button className="page-btn" onClick={() => {
+            setShowLeaders(true);
+            fetchTopUsers();
+          }}>🏆 Топ игроков</button>
+        </div>
 
         {/* POPUP: TASKS */}
         {popupOpen && (

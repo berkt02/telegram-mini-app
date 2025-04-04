@@ -13,17 +13,17 @@ body, html {
 .app {
   height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .overlay {
+  height: 100%;
   width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  box-sizing: border-box;
+  padding: 20px;
 }
 
 /* Welcome */
@@ -33,6 +33,8 @@ body, html {
   border-radius: 16px;
   font-size: 20px;
   font-weight: bold;
+  align-self: center;
+  margin-top: 10px;
   margin-bottom: 12px;
 }
 
@@ -44,7 +46,8 @@ body, html {
   font-size: 16px;
   display: flex;
   gap: 14px;
-  margin-bottom: 30px;
+  justify-content: center;
+  align-self: center;
 }
 
 .timer-box div {
@@ -57,13 +60,24 @@ body, html {
   opacity: 0.6;
 }
 
+/* Bottom Left */
+.bottom-left {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
 /* Buttons */
-.tasks-button, .page-btn {
+.tasks-button,
+.page-btn {
   background: #111;
   border: none;
   color: white;
   padding: 8px 16px;
-  margin-top: 10px;
   font-weight: bold;
   border-radius: 12px;
   cursor: pointer;
@@ -80,11 +94,10 @@ body, html {
   background: rgba(0, 0, 0, 0.7);
   padding: 6px 14px;
   border-radius: 12px;
-  margin-top: 10px;
   font-size: 14px;
 }
 
-/* Popup (TASKS + LEADERS) */
+/* Popup */
 .popup {
   position: fixed;
   top: 50%;
@@ -110,7 +123,7 @@ body, html {
   padding: 4px 8px;
   border-radius: 8px;
   display: block;
-  word-break: break-all;
+  word-break: break-word;
   margin-bottom: 12px;
 }
 
@@ -152,40 +165,14 @@ body, html {
   cursor: pointer;
 }
 
-/* Tasks list */
-.dynamic-tasks {
-  margin-top: 14px;
-}
-
-.task-item {
-  margin-bottom: 10px;
-}
-
-.task-item button {
-  padding: 6px 12px;
-  font-size: 13px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  background: #222;
-  color: white;
-}
-
-.task-item button:disabled {
-  background: #444;
-  opacity: 0.6;
-  cursor: default;
-}
-
-/* Leaders list inside popup */
+/* Leaderboard */
 .popup ul {
   list-style: none;
   padding: 0;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
-.popup li {
-  padding: 6px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+.popup ul li {
   font-size: 14px;
+  margin-bottom: 6px;
 }
