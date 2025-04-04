@@ -1,21 +1,28 @@
 import React, { useEffect, useState } from "react";
+import { ref, onValue, set, get, child } from "firebase/database";
+import { db } from "./firebase";
 import "./App.css";
 
 function App() {
-  // ⬇️ deadline через 20 дней от текущего времени
+  const tg = window.Telegram.WebApp;
+  const user = tg.initDataUnsafe?.user;
+  const userId = user?.id?.toString() || "guest";
+  const username = user?.username || "anonymous";
+
   const [targetDate] = useState(new Date(Date.now() + 20 * 24 * 60 * 60 * 1000));
   const [timeLeft, setTimeLeft] = useState({});
   const [popupOpen, setPopupOpen] = useState(false);
   const [balance, setBalance] = useState(0);
-
-  const [refCount, setRefCount] = useState(0); // просто пример
+  const [refCount, setRefCount] = useState(0);
   const [answer, setAnswer] = useState("");
   const [correctAnswered, setCorrectAnswered] = useState(false);
+  const [tasks, setTasks] = useState([]);
+  const [completedTasks, setCompletedTasks] = useState([]);
+  const [leaderboard, setLeaderboard] = useState([]);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      const now = new Date();
-      const diff = targetDate - now;
+      const diff = targetDate - new Date();
       const days = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
       const hours = Math.max(0, Math.floor((diff / (1000 * 60 * 60)) % 24));
       const minutes = Math.max(0, Math.floor((diff / (1000 * 60)) % 60));
@@ -25,13 +32,68 @@ function App() {
     return () => clearInterval(timer);
   }, [targetDate]);
 
+  useEffect(() => {
+    const balanceRef = ref(db, `users/${userId}/balance`);
+    const refCountRef = ref(db, `users/${userId}/refCount`);
+    onValue(balanceRef, (snap) => setBalance(snap.val() || 0));
+    onValue(refCountRef, (snap) => setRefCount(snap.val() || 0));
+
+    const completedRef = ref(db, `users/${userId}/completedTasks`);
+    onValue(completedRef, (snap) => {
+      setCompletedTasks(snap.val() || []);
+    });
+
+    const tasksRef = ref(db);
+    get(child(tasksRef, "tasks")).then((snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const loaded = Object.entries(data).map(([id, obj]) => ({
+          id,
+          ...obj,
+        }));
+        setTasks(loaded);
+      }
+    });
+
+    const usersRef = ref(db, "users");
+    onValue(usersRef, (snap) => {
+      const data = snap.val();
+      const users = Object.entries(data || {}).map(([id, user]) => ({
+        username: user.username || id,
+        balance: user.balance || 0,
+      }));
+      const sorted = users.sort((a, b) => b.balance - a.balance).slice(0, 10);
+      setLeaderboard(sorted);
+    });
+  }, [userId]);
+
+  useEffect(() => {
+    const inviterId = tg.initDataUnsafe?.start_param;
+    if (inviterId && inviterId !== userId) {
+      const refRef = ref(db, `users/${inviterId}/refCount`);
+      get(refRef).then((snap) => {
+        const current = snap.val() || 0;
+        set(refRef, current + 1);
+      });
+    }
+  }, [userId]);
+
   const togglePopup = () => setPopupOpen(!popupOpen);
 
   const handleAnswer = () => {
     if (answer.trim() === "4" && !correctAnswered) {
-      setBalance((prev) => prev + 10);
+      const newBalance = balance + 10;
+      set(ref(db, `users/${userId}/balance`), newBalance);
       setCorrectAnswered(true);
     }
+  };
+
+  const completeTask = (task) => {
+    if (completedTasks.includes(task.id)) return;
+    const newBalance = balance + task.reward;
+    set(ref(db, `users/${userId}/balance`), newBalance);
+    const updated = [...completedTasks, task.id];
+    set(ref(db, `users/${userId}/completedTasks`), updated);
   };
 
   return (
@@ -45,16 +107,40 @@ function App() {
           <div>{timeLeft.seconds} <span>секунд</span></div>
         </div>
 
-        {/* TASKS Button */}
         <button className="tasks-button" onClick={togglePopup}>TASKS</button>
         <div className="balance-display">bal: {balance.toFixed(2)}</div>
 
-        {/* POPUP TASK WINDOW */}
+        <div className="task-list">
+          {tasks.map((task) => (
+            <div key={task.id} className="task-card">
+              <p>{task.title}</p>
+              <a href={task.link} target="_blank" rel="noreferrer">Сделать</a>
+              <button
+                onClick={() => completeTask(task)}
+                disabled={completedTasks.includes(task.id)}
+              >
+                {completedTasks.includes(task.id) ? "✅ Выполнено" : `+${task.reward}`}
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <div className="leaderboard">
+          <h3>🏆 Топ 10 игроков</h3>
+          <ul>
+            {leaderboard.map((u, index) => (
+              <li key={index}>
+                {index + 1}. @{u.username}: {u.balance} REAP
+              </li>
+            ))}
+          </ul>
+        </div>
+
         {popupOpen && (
           <div className="popup">
             <h3>REF {refCount}/10</h3>
             <p>Your ref link:</p>
-            <code>https://t.me/reaphome_bot?start=ref123</code>
+            <code>https://t.me/reaphome_bot?start={userId}</code>
 
             <div className="task-question">
               <label>2 + 2 = </label>
