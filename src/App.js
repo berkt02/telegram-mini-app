@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
-  const [targetDate] = useState(new Date("2024-05-01T00:00:00"));
+  // ⬇️ deadline через 20 дней от текущего времени
+  const [targetDate] = useState(new Date(Date.now() + 20 * 24 * 60 * 60 * 1000));
   const [timeLeft, setTimeLeft] = useState({});
   const [popupOpen, setPopupOpen] = useState(false);
   const [balance, setBalance] = useState(0);
@@ -13,11 +14,12 @@ function App() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      const diff = targetDate - new Date();
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
+      const now = new Date();
+      const diff = targetDate - now;
+      const days = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
+      const hours = Math.max(0, Math.floor((diff / (1000 * 60 * 60)) % 24));
+      const minutes = Math.max(0, Math.floor((diff / (1000 * 60)) % 60));
+      const seconds = Math.max(0, Math.floor((diff / 1000) % 60));
       setTimeLeft({ days, hours, minutes, seconds });
     }, 1000);
     return () => clearInterval(timer);
