@@ -21,6 +21,14 @@ function App() {
   const [showLeaders, setShowLeaders] = useState(false);
   const [topUsers, setTopUsers] = useState([]);
 
+  // ✅ Сохраняем username в Firebase
+  useEffect(() => {
+    if (userId !== "guest" && username !== "anonymous") {
+      set(ref(db, `users/${userId}/username`), username);
+    }
+  }, [userId, username]);
+
+  // Таймер
   useEffect(() => {
     const timer = setInterval(() => {
       const diff = targetDate - new Date();
@@ -116,7 +124,6 @@ function App() {
           <div>{timeLeft.seconds} <span>секунд</span></div>
         </div>
 
-        {/* Bottom Left UI */}
         <div className="bottom-left">
           <button className="tasks-button" onClick={togglePopup}>TASKS</button>
           <div className="balance-display">bal: {balance.toFixed(2)}</div>
@@ -126,7 +133,6 @@ function App() {
           }}>🏆 Топ игроков</button>
         </div>
 
-        {/* POPUP: TASKS */}
         {popupOpen && (
           <div className="popup">
             <h3>REF {refCount}/10</h3>
@@ -163,7 +169,6 @@ function App() {
           </div>
         )}
 
-        {/* POPUP: LEADERBOARD */}
         {showLeaders && (
           <div className="popup">
             <h3>🏆 Топ 10</h3>
