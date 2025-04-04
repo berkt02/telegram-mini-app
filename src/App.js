@@ -21,7 +21,7 @@ function App() {
   const [showLeaders, setShowLeaders] = useState(false);
   const [topUsers, setTopUsers] = useState([]);
 
-  // ✅ Сохраняем юзера в Firebase при старте
+  // ✅ Сохраняем юзера при старте
   useEffect(() => {
     if (userId !== "guest") {
       update(ref(db, `users/${userId}`), {
@@ -43,18 +43,18 @@ function App() {
     return () => clearInterval(timer);
   }, [targetDate]);
 
-  // Баланс + рефералы
+  // Баланс и реферальные
   useEffect(() => {
     if (userId === "guest") return;
-
-    const balanceRef = ref(db, `users/${userId}/balance`);
-    const refCountRef = ref(db, `users/${userId}/refCount`);
-
-    onValue(balanceRef, (snap) => setBalance(snap.val() || 0));
-    onValue(refCountRef, (snap) => setRefCount(snap.val() || 0));
+    onValue(ref(db, `users/${userId}/balance`), (snap) =>
+      setBalance(snap.val() || 0)
+    );
+    onValue(ref(db, `users/${userId}/refCount`), (snap) =>
+      setRefCount(snap.val() || 0)
+    );
   }, [userId]);
 
-  // Реф-система
+  // Реферал
   useEffect(() => {
     const inviterId = tg.initDataUnsafe?.start_param;
     if (inviterId && inviterId !== userId) {
@@ -68,35 +68,32 @@ function App() {
 
   // Задания
   useEffect(() => {
-    const tasksRef = ref(db);
-    get(child(tasksRef, "tasks")).then((snapshot) => {
+    get(child(ref(db), "tasks")).then((snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
-        const loaded = Object.entries(data).map(([id, obj]) => ({
-          id,
-          ...obj,
-        }));
+        const loaded = Object.entries(data).map(([id, obj]) => ({ id, ...obj }));
         setTasks(loaded);
       }
     });
 
-    const completedRef = ref(db, `users/${userId}/completedTasks`);
-    onValue(completedRef, (snap) => {
-      setCompletedTasks(snap.val() || []);
-    });
+    onValue(ref(db, `users/${userId}/completedTasks`), (snap) =>
+      setCompletedTasks(snap.val() || [])
+    );
   }, [userId]);
 
+  // Топ
   const fetchTopUsers = () => {
-    const usersRef = ref(db, "users");
-    onValue(usersRef, (snapshot) => {
+    onValue(ref(db, "users"), (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        const usersArray = Object.entries(data).map(([id, user]) => ({
-          id,
-          username: user.username || id,
-          balance: user.balance || 0,
-        }));
-        const sorted = usersArray.sort((a, b) => b.balance - a.balance).slice(0, 10);
+        const sorted = Object.entries(data)
+          .map(([id, user]) => ({
+            id,
+            username: user.username || id,
+            balance: user.balance || 0,
+          }))
+          .sort((a, b) => b.balance - a.balance)
+          .slice(0, 10);
         setTopUsers(sorted);
       }
     });
@@ -104,27 +101,43 @@ function App() {
 
   const togglePopup = () => setPopupOpen(!popupOpen);
 
+  // ✅ Обновлённый ответ на 2+2
   const handleAnswer = () => {
-    if (answer.trim() === "4" && !correctAnswered) {
+    if (answer.trim() === "4" && !correctAnswered && userId !== "guest") {
       const newBalance = balance + 10;
-      set(ref(db, `users/${userId}/balance`), newBalance);
+      const updates = {
+        username,
+        balance: newBalance,
+        refCount,
+      };
+      set(ref(db, `users/${userId}`), updates);
       setCorrectAnswered(true);
+      setBalance(newBalance);
     }
   };
 
+  // ✅ Выполнение задания
   const completeTask = (task) => {
-    if (completedTasks.includes(task.id)) return;
+    if (completedTasks.includes(task.id) || userId === "guest") return;
     const newBalance = balance + task.reward;
-    set(ref(db, `users/${userId}/balance`), newBalance);
     const updated = [...completedTasks, task.id];
-    set(ref(db, `users/${userId}/completedTasks`), updated);
+
+    const updates = {
+      username,
+      balance: newBalance,
+      refCount,
+      completedTasks: updated,
+    };
+
+    set(ref(db, `users/${userId}`), updates);
+    setBalance(newBalance);
+    setCompletedTasks(updated);
   };
 
   return (
     <div className="app">
       <div className="overlay">
         <div className="welcome-box">WELCOME</div>
-
         <div className="timer-box">
           <div>{timeLeft.days} <span>дней</span></div>
           <div>{timeLeft.hours} <span>часов</span></div>
@@ -179,7 +192,7 @@ function App() {
           </div>
         )}
 
-        {/* POPUP: Лидерборд */}
+        {/* POPUP: Топ игроков */}
         {showLeaders && (
           <div className="popup">
             <h3>🏆 Топ 10</h3>
