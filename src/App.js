@@ -1,93 +1,62 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import { FaImage, FaWallet, FaChartLine } from "react-icons/fa";
 
 function App() {
-  const [user, setUser] = useState(null);
-  const [showPopup, setShowPopup] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(getTimeRemaining());
+
+  function getTimeRemaining() {
+    const targetDate = new Date("2024-05-01T00:00:00");
+    const now = new Date();
+    const diff = targetDate - now;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    return { days, hours, minutes, seconds };
+  }
 
   useEffect(() => {
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-    tg.expand();
-
-    const userData = tg.initDataUnsafe?.user;
-    setUser(userData);
+    const interval = setInterval(() => {
+      setTimeLeft(getTimeRemaining());
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
 
-  const togglePopup = () => {
-    setShowPopup((prev) => !prev);
-  };
-
   return (
-    <div className="container">
-      <header className="header">REAPER'S HOME</header>
+    <div className="app">
+      <div className="overlay">
+        <div className="card welcome-card">
+          <h1>WELCOME</h1>
+        </div>
 
-      {/* Аватарка + ник */}
-      {user ? (
-        <>
-          <img
-            src={`https://t.me/i/userpic/320/${user.username}.jpg`}
-            alt="avatar"
-            className="avatar"
-          />
-          <p className="nickname">@{user.username}</p>
-        </>
-      ) : (
-        <p className="nickname">Загрузка профиля...</p>
-      )}
-
-      {/* Блок баланса */}
-      <div className="balance-card">
-        <span className="balance-label">balance</span>
-        <div className="balance-row">
-          <div className="balance-amount">💰 0.00 REAP</div>
-          <div className="balance-buttons">
-            <button className="btn btn-sell" onClick={togglePopup}>SELL</button>
-            <button className="btn btn-buy" onClick={togglePopup}>BUY</button>
+        <div className="card timer-card">
+          <div className="timer-row">
+            <div className="timer-box">
+              <div className="value">{timeLeft.days}</div>
+              <div className="label">дней</div>
+            </div>
+            <div className="timer-box">
+              <div className="value">{timeLeft.hours}</div>
+              <div className="label">часов</div>
+            </div>
+            <div className="timer-box">
+              <div className="value">{timeLeft.minutes}</div>
+              <div className="label">минут</div>
+            </div>
+            <div className="timer-box">
+              <div className="value">{timeLeft.seconds}</div>
+              <div className="label">секунд</div>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* NFT Block */}
-      <div className="info-card">
-        <div className="row-between">
-          <div className="row-center">
-            <FaImage className="icon" />
-            <span className="label">NFT</span>
-          </div>
-          <button className="btn-flat" onClick={togglePopup}>OPEN</button>
+        <div className="bottom-block">
+          <div className="card tasks-card">TASKS</div>
+          <div className="card balance-card">bal: 0.00</div>
         </div>
       </div>
-
-      {/* Wallet Block */}
-      <div className="info-card">
-        <div className="row-between">
-          <div className="row-center">
-            <FaWallet className="icon" />
-            <span className="label">WALLET</span>
-          </div>
-          <button className="btn-flat" onClick={togglePopup}>CONNECT</button>
-        </div>
-      </div>
-
-      {/* Staking Block */}
-      <div className="info-card">
-        <div className="row-between">
-          <div className="row-center">
-            <FaChartLine className="icon" />
-            <span className="label">STAKING</span>
-          </div>
-          <button className="btn-flat" onClick={togglePopup}>OPEN</button>
-        </div>
-      </div>
-
-      {/* Всплывающая плашка */}
-      {showPopup && (
-  <div className="popup-overlay" onClick={togglePopup}>
-    <div className="popup-box">🚧WILL BE SOON</div>
-  </div>
-)}
     </div>
   );
 }

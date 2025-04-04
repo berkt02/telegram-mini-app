@@ -1,172 +1,79 @@
-body {
+html, body {
   margin: 0;
+  padding: 0;
   font-family: 'Segoe UI', sans-serif;
-  background-color: #2c2f48;
-  color: white;
+  height: 100%;
 }
 
-.container {
+.app {
+  background-image: url('./background.png');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   padding: 20px;
-  max-width: 400px;
-  margin: auto;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.card {
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  margin-bottom: 14px;
+  text-align: center;
+  font-weight: bold;
+  width: fit-content;
+}
+
+.welcome-card {
+  font-size: 20px;
+}
+
+.timer-card {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.timer-row {
+  display: flex;
+  gap: 20px;
+}
+
+.timer-box {
   text-align: center;
 }
 
-.header {
-  font-weight: bold;
-  text-align: left;
-  margin-bottom: 30px;
-  color: #e1e1e1;
-  opacity: 0.9;
-}
-
-.avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  margin-bottom: 10px;
-  object-fit: cover;
-  box-shadow: 0 0 6px rgba(0,0,0,0.3);
-}
-
-.nickname {
-  font-weight: bold;
-  font-size: 16px;
-  margin-bottom: 30px;
-  color: #f0f0f0;
-}
-
-.balance-card,
-.info-card {
-  background-color: #1f2233;
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-}
-
-.balance-label {
-  font-size: 10px;
-  text-align: left;
-  opacity: 0.6;
-  display: block;
-  margin-bottom: 5px;
-  color: #ddd;
-}
-
-.balance-row,
-.row-between {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.balance-amount {
-  font-size: 16px;
-  font-weight: bold;
-  color: #ffeb88;
-}
-
-.balance-buttons {
-  display: flex;
-  gap: 8px;
-}
-
-.btn {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.btn-sell {
-  background-color: #3e4b5c;
-  color: white;
-}
-
-.btn-buy {
-  background-color: #3d85f7;
-  color: white;
-}
-
-.row-center {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.icon {
+.timer-box .value {
   font-size: 18px;
-}
-
-.label {
   font-weight: bold;
-  font-size: 14px;
-  color: white;
 }
 
-.btn-flat {
-  background: #3e4b5c;
-  color: white;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.wallet-text {
-  font-size: 12px;
+.timer-box .label {
+  font-size: 10px;
   opacity: 0.7;
 }
 
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
+.bottom-block {
+  position: absolute;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
   width: 100%;
-  height: 100%;
-  background: rgba(10, 10, 10, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
 }
 
-.popup-box {
-  background-color: #cfcfcf;
-  color: black;
-  padding: 30px 50px;
-  border-radius: 20px;
-  font-size: 24px;
-  font-weight: bold;
-  text-align: center;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-  cursor: pointer;
-}
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.popup-box {
-  background-color: #b3b3b3;
-  color: black;
-  padding: 25px 35px;
-  border-radius: 20px;
-  font-size: 22px;
-  font-weight: bold;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-  cursor: pointer;
-  transition: 0.3s ease;
-}
 
 
